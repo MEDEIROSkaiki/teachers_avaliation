@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initialscale=1.0">
+<title>Avaliacao dos Professores</title>
+</head>
+<body>
+Em processo...
+
+<h2>Login</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Entrar</button>
+</form>
+
+</body>
+</html>
+<!-- aqui deve ir a tela de login  -->
