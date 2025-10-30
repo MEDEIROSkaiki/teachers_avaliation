@@ -1,20 +1,57 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone
+
+# ========================================
+# Manager para o nosso Custom User Model (Pessoa)
+# ========================================
+class PessoaManager(BaseUserManager):
+    def create_user(self, cpf, nome, password=None, **extra_fields):
+        if not cpf:
+            raise ValueError('O CPF é obrigatório')
+        
+        user = self.model(cpf=cpf, nome=nome, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, cpf, nome, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self.create_user(cpf, nome, password, **extra_fields)
+
 
 # ========================================
 # Pessoa (Aluno, Professor, Admin)
 # ========================================
-class Pessoa(models.Model):
+class Pessoa(AbstractBaseUser, PermissionsMixin):
     TIPO_CHOICES = [
         ('aluno', 'Aluno'),
         ('professor', 'Professor'),
         ('admin', 'Admin'),
     ]
 
+    # Campos do seu modelo original
     nome = models.CharField(max_length=150)
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
-    admin = models.BooleanField(default=False)
     data_nascimento = models.DateField(null=True, blank=True)
     cpf = models.CharField(max_length=11, unique=True)
+
+    # Campos requeridos pelo Django
+    is_staff = models.BooleanField(default=False) # Permite acesso ao admin
+    is_active = models.BooleanField(default=True) # Usuário ativo pode logar
+    date_joined = models.DateTimeField(default=timezone.now)
+
+    # Define o manager e o campo que será usado como "username"
+    objects = PessoaManager()
+    USERNAME_FIELD = 'cpf'
+    REQUIRED_FIELDS = ['nome'] # Campos pedidos ao criar superuser
 
     def __str__(self):
         return self.nome

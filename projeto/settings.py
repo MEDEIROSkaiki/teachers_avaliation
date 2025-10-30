@@ -122,7 +122,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -132,3 +136,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'              # nome da url de login
 LOGIN_REDIRECT_URL = 'home'      # para onde o usuário vai depois de logar
 LOGOUT_REDIRECT_URL = 'login'    # para onde vai depois de sair
+
+AUTH_USER_MODEL = 'teacher_avaliation.Pessoa' # Aponta para o nosso modelo
