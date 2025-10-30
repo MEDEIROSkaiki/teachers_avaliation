@@ -91,6 +91,102 @@
     .user-profile .fa-user { font-size: 1.2rem; }
     .user-profile .fa-chevron-down { font-size: 0.8rem; }
 
+/* ======== DROPDOWN DO USUÁRIO (ATUALIZADO) ======== */
+.nav-right {
+  position: relative; /* Âncora para o dropdown */
+}
+
+.user-profile {
+  cursor: pointer;
+  /* ... (o resto do seu .user-profile-css) ... */
+}
+
+.user-dropdown {
+  display: none;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 300px;
+  background-color: var(--painel-central);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  padding: 30px 25px;
+  z-index: 100;
+  color: #333;
+}
+
+.user-dropdown.show {
+  display: block;
+}
+
+.user-dropdown .sidebar-profile {
+  text-align: center;
+  border-bottom: 1px solid var(--cinza-claro);
+  padding-bottom: 25px;
+}
+.user-dropdown .profile-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--cinza-claro);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  font-size: 2.8rem; 
+  color: var(--azul-acinzentado);
+}
+.user-dropdown .sidebar-profile strong {
+  display: block;
+  font-size: 1.15rem;
+  color: #333;
+  font-weight: 600;
+}
+.user-dropdown .sidebar-profile span {
+  font-size: 0.9rem;
+  color: var(--verde-escuro-letras);
+}
+
+/* ====== MUDANÇAS PRINCIPAIS AQUI ======
+*/
+
+.user-dropdown .sidebar-menu {
+  margin: 25px 0;
+  text-align: center; /* <<< ALINHA OS LINKS NO CENTRO */
+}
+
+.user-dropdown .sidebar-menu a {
+  display: block; /* Faz o link ocupar a linha */
+  padding: 10px 0;
+  margin-bottom: 5px;
+  color: var(--cinza-escuro-letras); /* <<< COR PADRÃO (CINZA) */
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: underline; /* <<< ADICIONA SUBLINHADO */
+  text-decoration-color: var(--cinza-claro); /* Sublinhado mais claro */
+  text-underline-offset: 6px; /* Distância do sublinhado */
+  transition: color 0.3s ease;
+}
+
+/* Estilo do link ATIVO (como na imagem) */
+.user-dropdown .sidebar-menu a.active,
+.user-dropdown .sidebar-menu a:hover {
+  color: var(--verde); /* <<< COR ATIVA (VERDE) */
+  font-weight: 700; /* <<< MAIS FORTE */
+  text-decoration-color: var(--verde); /* Sublinhado verde */
+}
+
+.user-dropdown .sidebar-logout {
+  text-align: center; /* <<< ALINHA O SAIR NO CENTRO */
+  margin-top: 20px;
+}
+
+.user-dropdown .sidebar-logout a {
+  color: var(--cinza-escuro-letras);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
     /* ======== CONTEÚDO CENTRAL (Wrapper) ======== */
     /* Este CSS agora se aplica a qualquer <main> que colocarmos */
     .content {
@@ -183,10 +279,44 @@
           <a href="/contato">Contato</a>
         </nav>
       </div>
-      <div class="user-profile" title="Perfil do usuário">
-        <i class="fa-solid fa-user"></i>
-        <i class="fa-solid fa-chevron-down"></i>
+  <div class="nav-right">
+        <div class="user-profile" title="Perfil do usuário" id="user-profile-button">
+          <i class="fa-solid fa-user"></i>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+
+        <div class="user-dropdown" id="user-dropdown-menu">
+          <div class="sidebar-profile">
+            <div class="profile-pic">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <strong>Tales Sales</strong>
+            <span>Administrador</span>
+          </div>
+
+          <nav class="sidebar-menu">
+            <a href="{% url 'adicionar_aluno' %}" 
+               class="{% if request.resolver_match.url_name == 'adicionar_aluno' %}active{% endif %}">
+               Adicionar Aluno
+            </a>
+
+            <a href="{% url 'adicionar_disciplina' %}" 
+               class="{% if request.resolver_match.url_name == 'adicionar_disciplina' %}active{% endif %}">
+               Adicionar Disciplina
+            </a>
+
+            <a href="{% url 'adicionar_professor' %}" 
+               class="{% if request.resolver_match.url_name == 'adicionar_professor' %}active{% endif %}">
+               Adicionar Professor
+            </a>
+          </nav>
+          
+          <div class="sidebar-logout">
+            <a href="#">Sair</a>
+          </div>
+        </div>
       </div>
+      
     </div>
   </header>
 
@@ -195,21 +325,38 @@
 
   <footer>
     <div class="footer-container">
-      <div class="footer-social">
-        <a href="#" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
-        <a href="#" title="Twitter (X)"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-      </div>
-      <div class="footer-links">
-        <a href="/sobre">Sobre Nós</a>
-        <a href="/contato">Contato</a>
-        <a href="/termos">Termos de Uso</a>
-        <a href="/privacidade">Política de Privacidade</a>
-      </div>
       <p class="footer-copy">© 2025 EduAvalia. Todos os direitos reservados.</p>
     </div>
   </footer>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Seleciona os elementos pelos IDs que demos no HTML
+    const userProfileButton = document.getElementById('user-profile-button');
+    const userDropdown = document.getElementById('user-dropdown-menu');
+
+    if (userProfileButton && userDropdown) {
+      
+      // 1. Abre/Fecha o menu ao clicar no botão
+      userProfileButton.addEventListener('click', function(event) {
+        event.stopPropagation(); 
+        userDropdown.classList.toggle('show');
+      });
+
+      // 2. Fecha o dropdown se clicar em qualquer outro lugar da tela
+      window.addEventListener('click', function(event) {
+        if (userDropdown.classList.contains('show')) {
+          userDropdown.classList.remove('show');
+        }
+      });
+
+      // 3. Impede que cliques DENTRO do dropdown o fechem
+      userDropdown.addEventListener('click', function(event) {
+        event.stopPropagation();
+      });
+    }
+  });
+</script>
 
 </body>
 </html>

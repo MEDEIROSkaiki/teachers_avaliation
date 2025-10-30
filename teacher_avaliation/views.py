@@ -22,3 +22,14 @@ def signup(request):
         'form': form
     }
     return render(request, 'teacher_avaliation/signup.html', context)
+
+def adicionar_aluno(request):
+    # Esta função simplesmente renderiza o template que você acabou de criar
+    return render(request, 'teacher_avaliation/adicionar_aluno.html')
+
+def adicionar_professor(request):
+    # Por enquanto, ela apenas renderiza o template
+    return render(request, 'teacher_avaliation/adicionar_professor.html')
+
+def adicionar_disciplina(request):
+    return render(request, 'teacher_avaliation/adicionar_disciplina.html')
