@@ -1,0 +1,12 @@
+# Ambiente Virtual
+.venv
+
+# Bytecode e arquivos compilados do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de configuração local e segredos
+.env
+
