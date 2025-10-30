@@ -8,6 +8,11 @@ __pycache__/
 *.pyo
 *.pyd
 
+#Bancos de dados
+*.sqlite3
+
+
+
 # Arquivos de configuração local e segredos
 .env
 
