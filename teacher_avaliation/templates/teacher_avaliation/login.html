@@ -1,59 +1,197 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sistema</title>
-    <!-- Bootstrap -->
+    <title>Login - EduAvalia</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <style>
         body {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            /* ATUALIZADO: 
+              Gradiente exato do seu Figma (C6D2D9 -> 8BAFC1) 
+            */
+            background: linear-gradient(135deg, #C6D2D9, #8BAFC1);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
-        .login-card {
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            padding: 2rem;
+
+        .login-container {
+            max-width: 960px;
             width: 100%;
-            max-width: 400px;
+            background: #FFFFFF;
+            /* Bordas arredondadas */
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Importante para as bordas */
         }
-        .login-card h3 {
+
+        .login-form-side {
+            padding: 3rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo-container {
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-container img {
+            height: 45px; /* Ajuste a altura conforme sua logo */
+        }
+
+        /* --- Estilos dos Campos de Input --- */
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #A7ADAF; /* Cor cinza do ícone */
+            z-index: 10;
+        }
+
+        .form-control {
+            height: 50px;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            /* Chave para o ícone não sobrepor o texto! */
+            padding-left: 3rem; 
+            font-size: 0.95rem;
+        }
+        
+        .form-control:focus {
+            border-color: #18A594; /* Cor verde do botão */
+            box-shadow: 0 0 0 0.25rem rgba(24, 165, 148, 0.25);
+        }
+
+        /* --- Estilos do Botão e Link (Como no Figma) --- */
+
+        .centered-controls {
             text-align: center;
-            margin-bottom: 1.5rem;
-            font-weight: bold;
-            color: #333;
+            margin-top: 2rem; /* Espaço acima do botão */
         }
-        .btn-primary {
-            background: #4facfe;
+
+        .btn-login {
+            /* Cor verde do botão */
+            background-color: #18A594; 
             border: none;
+            /* Bordas mais arredondadas como no Figma */
+            border-radius: 10px; 
+            padding: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #fff;
+            
+            /* ATUALIZADO: Faz o botão ficar menor */
+            width: 70%; /* Ajuste (ex: 60%, 80%) se precisar */
+            margin: 0 auto; 
+            display: block;
         }
-        .btn-primary:hover {
-            background: #3a8dde;
+
+        .btn-login:hover {
+            background-color: #148A7D;
+            color: #fff;
+        }
+        
+        .forgot-password {
+            /* Alinhado abaixo do botão */
+            margin-top: 1rem; 
+        }
+
+        .forgot-password a {
+            color: #A7ADAF; /* Cor cinza */
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        /* --- Coluna da Arte (Direita) --- */
+        .login-art-side {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            /* Fundo levemente diferente para destacar o card */
+            background-color: #F8F9FA; 
+        }
+
+        .login-art-side img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <h3>Login</h3>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+    <div class="container">
+        <div class="login-container row g-0 mx-auto">
+            
+            <div class="col-md-6 login-form-side">
+
+                <div class="logo-container">
+                    <img src="{% static 'images/logo-eduavalia.png' %}" alt="EduAvalia Logo">
+                </div>
+
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+
+                    <div class="mb-3 input-group">
+                        <i class="bi bi-person input-icon"></i>
+                        {{ form.username }}
+                    </div>
+
+                    <div class="mb-4 input-group">
+                        <i class="bi bi-lock input-icon"></i>
+                        {{ form.password }}
+                    </div>
+
+                    <div class="centered-controls">
+                        <button type="submit" class="btn btn-login">Login</button>
+                        
+                        <div class="forgot-password">
+                            <a href="#">esqueceu a senha?</a>
+                        </div>
+                    </div>
+
+                </form>
             </div>
-        </form>
-        <p class="text-center mt-3">
-            <small>Ainda não tem conta? <a href="{% url 'signup' %}">Cadastre-se</a></small>
-        </p>
+
+            <div class="col-md-6 d-none d-md-flex login-art-side">
+                <img src="{% static 'images/login-art.png' %}" alt="Arte Geométrica">
+            </div>
+
+        </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -76,14 +76,14 @@ WSGI_APPLICATION = 'projeto.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_teachers_avaliation',  # sem espaço
-        'USER': 'leticia_rosa',            # sem espaço
-        'PASSWORD': '0000',
+        'NAME': 'db_teachers_avaliation',
+        'USER': 'postgres',
+        'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': '5432',
         'OPTIONS': {
-            'client_encoding': 'WIN1252',
-        }
+            'client_encoding': 'UTF8',
+        },
     }
 }
 
